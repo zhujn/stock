@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基金投资监督指标AI比对</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 主容器 */
+        .main-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* 页面头部 */
+        .page-header {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px 32px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .header-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-title::before {
+            content: "📊";
+            font-size: 26px;
+        }
+
+        .fund-info {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #f5f7fa;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .info-item .label {
+            color: #666;
+        }
+
+        .info-item .value {
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .info-item .value.highlight {
+            color: #1890ff;
+        }
+
+        /* 统计卡片 */
+        .stats-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: #fff;
+            border-radius: 10px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .stat-card.matched {
+            border-left: 4px solid #52c41a;
+        }
+
+        .stat-card.unmatched {
+            border-left: 4px solid #ff4d4f;
+        }
+
+        .stat-card.pending {
+            border-left: 4px solid #faad14;
+        }
+
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-card.matched .stat-icon {
+            background: #f6ffed;
+        }
+
+        .stat-card.unmatched .stat-icon {
+            background: #fff2f0;
+        }
+
+        .stat-card.pending .stat-icon {
+            background: #fffbe6;
+        }
+
+        /* 比对区域 */
+        .compare-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            border: 1px solid #d9d9d9;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #555;
+            transition: all 0.2s;
+        }
+
+        .filter-tab:hover {
+            border-color: #40a9ff;
+            color: #40a9ff;
+        }
+
+        .filter-tab.active {
+            background: #1890ff;
+            border-color: #1890ff;
+            color: #fff;
+        }
+
+        /* 左右分栏布局 */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 280px 1fr;
+            gap: 0;
+            min-height: 600px;
+        }
+
+        /* 左侧 - 已配置指标 */
+        .left-panel {
+            background: #f8fafc;
+            border-radius: 10px 0 0 10px;
+            padding: 20px;
+            border-right: 1px dashed #d9d9d9;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e8e8e8;
+        }
+
+        .panel-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-title.config::before {
+            content: "⚙️";
+        }
+
+        .panel-count {
+            font-size: 13px;
+            color: #666;
+            background: #fff;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        /* 右侧 - AI识别指标 */
+        .right-panel {
+            background: #f8fafc;
+            border-radius: 0 10px 10px 0;
+            padding: 20px;
+            border-left: 1px dashed #d9d9d9;
+        }
+
+        .panel-title.ai::before {
+            content: "🤖";
+        }
+
+        /* 中间 - 操作区 */
+        .center-panel {
+            background: #fff;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .match-item {
+            background: #fff;
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid #e8e8e8;
+            transition: all 0.3s;
+        }
+
+        .match-item:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .match-status {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .match-status.matched {
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+        }
+
+        .match-status.unmatched {
+            background: #fff2f0;
+            border: 1px solid #ffccc7;
+        }
+
+        .match-status.pending {
+            background: #fffbe6;
+            border: 1px solid #ffe58f;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .match-status.matched .status-badge {
+            color: #52c41a;
+        }
+
+        .match-status.unmatched .status-badge {
+            color: #ff4d4f;
+        }
+
+        .match-status.pending .status-badge {
+            color: #faad14;
+        }
+
+        .similarity-score {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .match-status.matched .similarity-score {
+            color: #52c41a;
+        }
+
+        .match-status.unmatched .similarity-score {
+            color: #ff4d4f;
+        }
+
+        .match-status.pending .similarity-score {
+            color: #faad14;
+        }
+
+        /* 操作按钮 */
+        .action-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .action-btn {
+            height: 40px;
+            border: 2px solid;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-correct {
+            background: #fff;
+            border-color: #52c41a;
+            color: #52c41a;
+        }
+
+        .btn-correct:hover, .btn-correct.active {
+            background: #52c41a;
+            color: #fff;
+        }
+
+        .btn-wrong {
+            background: #fff;
+            border-color: #ff4d4f;
+            color: #ff4d4f;
+        }
+
+        .btn-wrong:hover, .btn-wrong.active {
+            background: #ff4d4f;
+            color: #fff;
+        }
+
+        .feedback-area {
+            margin-top: 12px;
+        }
+
+        .feedback-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        .feedback-input {
+            width: 100%;
+            height: 60px;
+            padding: 8px 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            font-size: 12px;
+            resize: none;
+            font-family: inherit;
+        }
+
+        .feedback-input:focus {
+            outline: none;
+            border-color: #40a9ff;
+            box-shadow: 0 0 0 3px rgba(64, 169, 255, 0.1);
+        }
+
+        /* 指标卡片 */
+        .indicator-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border-left: 4px solid #1890ff;
+            transition: all 0.3s;
+        }
+
+        .indicator-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .indicator-card.matched {
+            border-left-color: #52c41a;
+        }
+
+        .indicator-card.unmatched {
+            border-left-color: #ff4d4f;
+        }
+
+        .indicator-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .indicator-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a1a;
+            line-height: 1.4;
+        }
+
+        .indicator-code {
+            font-size: 12px;
+            color: #999;
+            background: #f5f5f5;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .indicator-section {
+            margin-top: 12px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-label.business::before {
+            content: "💼";
+        }
+
+        .section-label.contract::before {
+            content: "📄";
+        }
+
+        .section-content {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .clause-ref {
+            display: inline-block;
+            font-size: 11px;
+            color: #1890ff;
+            background: #e6f7ff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+        }
+
+        /* 底部操作栏 */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-top: 1px solid #e8e8e8;
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+        }
+
+        .progress-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .progress-text strong {
+            color: #1a1a1a;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #52c41a, #73d13d);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .bottom-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(24, 144, 255, 0.4);
+        }
+
+        /* Toast提示 */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: #333;
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background: #52c41a;
+        }
+
+        .toast.error {
+            background: #ff4d4f;
+        }
+
+        /* 快捷键提示 */
+        .shortcut-tips {
+            position: fixed;
+            bottom: 90px;
+            right: 32px;
+            background: rgba(0,0,0,0.8);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .shortcut-tips kbd {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- 页面头部 -->
+        <div class="page-header">
+            <div class="header-title">基金投资监督指标AI识别比对</div>
+            <div class="fund-info">
+                <div class="info-item">
+                    <span class="label">基金名称：</span>
+                    <span class="value highlight">阳光稳健增长混合型基金</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">基金代码：</span>
+                    <span class="value">001234</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">合同版本：</span>
+                    <span class="value">2024年3月修订版</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">比对日期：</span>
+                    <span class="value">2024-05-24</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 统计卡片 -->
+        <div class="stats-bar">
+            <div class="stat-card matched">
+                <div class="stat-info">
+                    <span class="stat-label">已配置指标</span>
+                    <span class="stat-value">18条</span>
+                </div>
+                <div class="stat-icon">⚙️</div>
+            </div>
+            <div class="stat-card matched">
+                <div class="stat-info">
+                    <span class="stat-label">AI识别指标</span>
+                    <span class="stat-value">16条</span>
+                </div>
+                <div class="stat-icon">🤖</div>
+            </div>
+            <div class="stat-card matched">
+                <div class="stat-info">
+                    <span class="stat-label">匹配成功</span>
+                    <span class="stat-value" style="color: #52c41a;">14条</span>
+                </div>
+                <div class="stat-icon">✓</div>
+            </div>
+            <div class="stat-card unmatched">
+                <div class="stat-info">
+                    <span class="stat-label">待确认</span>
+                    <span class="stat-value" style="color: #ff4d4f;">4条</span>
+                </div>
+                <div class="stat-icon">!</div>
+            </div>
+            <div class="stat-card pending">
+                <div class="stat-info">
+                    <span class="stat-label">已标记</span>
+                    <span class="stat-value" id="markedCount">0/18</span>
+                </div>
+                <div class="stat-icon">📝</div>
+            </div>
+        </div>
+
+        <!-- 比对区域 -->
+        <div class="compare-section">
+            <div class="section-header">
+                <div class="section-title">指标逐条比对</div>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="filterItems('all')">全部</button>
+                    <button class="filter-tab" onclick="filterItems('matched')">✓ 匹配</button>
+                    <button class="filter-tab" onclick="filterItems('unmatched')">✗ 不匹配</button>
+                    <button class="filter-tab" onclick="filterItems('pending')">⏳ 待确认</button>
+                </div>
+            </div>
+
+            <div class="compare-grid">
+                <!-- 左侧 - 已配置指标 -->
+                <div class="left-panel">
+                    <div class="panel-header">
+                        <div class="panel-title config">已配置投资监督指标</div>
+                        <div class="panel-count">18条</div>
+                    </div>
+
+                    <!-- 指标卡片1 -->
+                    <div class="indicator-card matched" data-index="0">
+                        <div class="indicator-header">
+                            <div class="indicator-name">单一股票持仓比例限制</div>
+                            <div class="indicator-code">INV-001</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label business">业务涵义</div>
+                            <div class="section-content">
+                                控制基金对单一股票的投资集中度风险，防止因个股波动对基金净值造成过大影响。当持仓比例超过设定阈值时，系统应触发预警。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 指标卡片2 -->
+                    <div class="indicator-card matched" data-index="1">
+                        <div class="indicator-header">
+                            <div class="indicator-name">行业集中度限制</div>
+                            <div class="indicator-code">INV-002</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label business">业务涵义</div>
+                            <div class="section-content">
+                                限制基金在单一行业的投资占比，分散行业系统性风险。适用于周期性较强或政策敏感型行业的风险管控。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 指标卡片3 -->
+                    <div class="indicator-card unmatched" data-index="2">
+                        <div class="indicator-header">
+                            <div class="indicator-name">关联交易限制</div>
+                            <div class="indicator-code">INV-003</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label business">业务涵义</div>
+                            <div class="section-content">
+                                防范基金与关联方之间的利益输送风险，确保投资决策的独立性和公允性。需监控与基金管理人、托管人关联方的交易行为。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 指标卡片4 -->
+                    <div class="indicator-card matched" data-index="3">
+                        <div class="indicator-header">
+                            <div class="indicator-name">杠杆比例上限</div>
+                            <div class="indicator-code">INV-004</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label business">业务涵义</div>
+                            <div class="section-content">
+                                控制基金整体杠杆水平，防范过度杠杆导致的流动性风险和净值波动风险。包括回购融资、衍生品等形成的杠杆。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 指标卡片5 -->
+                    <div class="indicator-card pending" data-index="4">
+                        <div class="indicator-header">
+                            <div class="indicator-name">流动性资产比例</div>
+                            <div class="indicator-code">INV-005</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label business">业务涵义</div>
+                            <div class="section-content">
+                                确保基金保持足够的流动性资产以应对赎回压力，维护基金运作的稳定性。流动性资产包括现金、国债等高流动性金融工具。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 中间 - 操作区 -->
+                <div class="center-panel">
+                    <!-- 操作卡片1 -->
+                    <div class="match-item" data-index="0">
+                        <div class="match-status matched">
+                            <div class="status-badge">
+                                <span>✓</span>
+                                <span>高度匹配</span>
+                            </div>
+                            <div class="similarity-score">95%</div>
+                        </div>
+                        <div class="action-group">
+                            <button class="action-btn btn-correct active" onclick="markItem(0, 'correct')">
+                                <span>✓</span> 识别正确
+                            </button>
+                            <button class="action-btn btn-wrong" onclick="markItem(0, 'wrong')">
+                                <span>✗</span> 识别错误
+                            </button>
+                        </div>
+                        <div class="feedback-area">
+                            <div class="feedback-label">反馈说明（可选）</div>
+                            <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 操作卡片2 -->
+                    <div class="match-item" data-index="1">
+                        <div class="match-status matched">
+                            <div class="status-badge">
+                                <span>✓</span>
+                                <span>高度匹配</span>
+                            </div>
+                            <div class="similarity-score">92%</div>
+                        </div>
+                        <div class="action-group">
+                            <button class="action-btn btn-correct active" onclick="markItem(1, 'correct')">
+                                <span>✓</span> 识别正确
+                            </button>
+                            <button class="action-btn btn-wrong" onclick="markItem(1, 'wrong')">
+                                <span>✗</span> 识别错误
+                            </button>
+                        </div>
+                        <div class="feedback-area">
+                            <div class="feedback-label">反馈说明（可选）</div>
+                            <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 操作卡片3 -->
+                    <div class="match-item" data-index="2">
+                        <div class="match-status unmatched">
+                            <div class="status-badge">
+                                <span>✗</span>
+                                <span>不匹配</span>
+                            </div>
+                            <div class="similarity-score">45%</div>
+                        </div>
+                        <div class="action-group">
+                            <button class="action-btn btn-correct" onclick="markItem(2, 'correct')">
+                                <span>✓</span> 识别正确
+                            </button>
+                            <button class="action-btn btn-wrong active" onclick="markItem(2, 'wrong')">
+                                <span>✗</span> 识别错误
+                            </button>
+                        </div>
+                        <div class="feedback-area">
+                            <div class="feedback-label">反馈说明（可选）</div>
+                            <textarea class="feedback-input" placeholder="请说明不匹配原因..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 操作卡片4 -->
+                    <div class="match-item" data-index="3">
+                        <div class="match-status matched">
+                            <div class="status-badge">
+                                <span>✓</span>
+                                <span>高度匹配</span>
+                            </div>
+                            <div class="similarity-score">88%</div>
+                        </div>
+                        <div class="action-group">
+                            <button class="action-btn btn-correct active" onclick="markItem(3, 'correct')">
+                                <span>✓</span> 识别正确
+                            </button>
+                            <button class="action-btn btn-wrong" onclick="markItem(3, 'wrong')">
+                                <span>✗</span> 识别错误
+                            </button>
+                        </div>
+                        <div class="feedback-area">
+                            <div class="feedback-label">反馈说明（可选）</div>
+                            <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 操作卡片5 -->
+                    <div class="match-item" data-index="4">
+                        <div class="match-status pending">
+                            <div class="status-badge">
+                                <span>⏳</span>
+                                <span>待确认</span>
+                            </div>
+                            <div class="similarity-score">72%</div>
+                        </div>
+                        <div class="action-group">
+                            <button class="action-btn btn-correct" onclick="markItem(4, 'correct')">
+                                <span>✓</span> 识别正确
+                            </button>
+                            <button class="action-btn btn-wrong" onclick="markItem(4, 'wrong')">
+                                <span>✗</span> 识别错误
+                            </button>
+                        </div>
+                        <div class="feedback-area">
+                            <div class="feedback-label">反馈说明（可选）</div>
+                            <textarea class="feedback-input" placeholder="请确认是否匹配..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧 - AI识别指标 -->
+                <div class="right-panel">
+                    <div class="panel-header">
+                        <div class="panel-title ai">AI识别合同指标</div>
+                        <div class="panel-count">16条</div>
+                    </div>
+
+                    <!-- AI指标卡片1 -->
+                    <div class="indicator-card matched" data-index="0">
+                        <div class="indicator-header">
+                            <div class="indicator-name">个股持仓上限控制</div>
+                            <div class="indicator-code">AI-001</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "本基金投资于单一股票的比例不得超过基金资产净值的10%，如因被动超标需在20个交易日内调整至合规水平。"
+                            </div>
+                            <span class="clause-ref">第12条第3款</span>
+                        </div>
+                    </div>
+
+                    <!-- AI指标卡片2 -->
+                    <div class="indicator-card matched" data-index="1">
+                        <div class="indicator-header">
+                            <div class="indicator-name">行业投资集中度管理</div>
+                            <div class="indicator-code">AI-002</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "基金投资于单一行业的比例原则上不超过基金资产净值的30%，对于景气度较高的行业可适当放宽至35%。"
+                            </div>
+                            <span class="clause-ref">第12条第4款</span>
+                        </div>
+                    </div>
+
+                    <!-- AI指标卡片3 -->
+                    <div class="indicator-card unmatched" data-index="2">
+                        <div class="indicator-header">
+                            <div class="indicator-name">关联方交易监控</div>
+                            <div class="indicator-code">AI-003</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "本基金不得与基金管理人、基金托管人及其控股股东进行交易。"
+                            </div>
+                            <span class="clause-ref">第15条第1款</span>
+                        </div>
+                    </div>
+
+                    <!-- AI指标卡片4 -->
+                    <div class="indicator-card matched" data-index="3">
+                        <div class="indicator-header">
+                            <div class="indicator-name">融资杠杆比例控制</div>
+                            <div class="indicator-code">AI-004</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "本基金的总杠杆比例（包括回购融资、衍生品等）不得超过基金资产净值的140%，确保基金运作稳健。"
+                            </div>
+                            <span class="clause-ref">第18条第2款</span>
+                        </div>
+                    </div>
+
+                    <!-- AI指标卡片5 -->
+                    <div class="indicator-card pending" data-index="4">
+                        <div class="indicator-header">
+                            <div class="indicator-name">高流动性资产配置要求</div>
+                            <div class="indicator-code">AI-005</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "基金应保持不低于资产净值5%的现金或到期日在一年以内的政府债券，以满足赎回需求。"
+                            </div>
+                            <span class="clause-ref">第11条第5款</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部操作栏 -->
+    <div class="bottom-bar">
+        <div class="progress-info">
+            <span class="progress-text">已标记 <strong id="markedNum">0</strong> / 18 条指标</span>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%;"></div>
+            </div>
+        </div>
+        <div class="bottom-actions">
+            <button class="btn btn-secondary" onclick="saveDraft()">保存草稿</button>
+            <button class="btn btn-primary" onclick="submitReview()">提交审核</button>
+        </div>
+    </div>
+
+    <!-- 快捷键提示 -->
+    <div class="shortcut-tips">
+        <div>快捷键：</div>
+        <div><kbd>Y</kbd> 标记正确</div>
+        <div><kbd>N</kbd> 标记错误</div>
+        <div><kbd>↑</kbd><kbd>↓</kbd> 切换条目</div>
+    </div>
+
+    <!-- Toast提示 -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let markedItems = new Set();
+        let currentIndex = 0;
+
+        // 标记条目
+        function markItem(index, type) {
+            const item = document.querySelector(`.match-item[data-index="${index}"]`);
+            const correctBtn = item.querySelector('.btn-correct');
+            const wrongBtn = item.querySelector('.btn-wrong');
+            const statusDiv = item.querySelector('.match-status');
+
+            // 重置按钮状态
+            correctBtn.classList.remove('active');
+            wrongBtn.classList.remove('active');
+
+            // 设置选中状态
+            if (type === 'correct') {
+                correctBtn.classList.add('active');
+                statusDiv.className = 'match-status matched';
+                showToast('已标记为「识别正确」', 'success');
+            } else {
+                wrongBtn.classList.add('active');
+                statusDiv.className = 'match-status unmatched';
+                showToast('已标记为「识别错误」', 'error');
+            }
+
+            // 更新标记集合
+            markedItems.add(index);
+            updateProgress();
+        }
+
+        // 更新进度
+        function updateProgress() {
+            const marked = markedItems.size;
+            const total = 18;
+            const percent = (marked / total * 100).toFixed(0);
+
+            document.getElementById('markedNum').textContent = marked;
+            document.getElementById('markedCount').textContent = `${marked}/${total}`;
+            document.getElementById('progressBar').style.width = percent + '%';
+        }
+
+        // 筛选功能
+        function filterItems(type) {
+            // 更新标签状态
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // 筛选逻辑（示例）
+            const items = document.querySelectorAll('.match-item');
+            items.forEach(item => {
+                const status = item.querySelector('.match-status');
+                let show = true;
+
+                if (type === 'matched' && !status.classList.contains('matched')) show = false;
+                if (type === 'unmatched' && !status.classList.contains('unmatched')) show = false;
+                if (type === 'pending' && !status.classList.contains('pending')) show = false;
+
+                item.style.display = show ? 'block' : 'none';
+            });
+
+            showToast(`已筛选：${type === 'all' ? '全部' : type === 'matched' ? '匹配' : type === 'unmatched' ? '不匹配' : '待确认'}`);
+        }
+
+        // 保存草稿
+        function saveDraft() {
+            showToast('草稿已保存', 'success');
+        }
+
+        // 提交审核
+        function submitReview() {
+            if (markedItems.size < 18) {
+                if (!confirm(`还有 ${18 - markedItems.size} 条未标记，确定要提交吗？`)) {
+                    return;
+                }
+            }
+            showToast('审核已提交', 'success');
+        }
+
+        // 显示Toast
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // 键盘快捷键
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'TEXTAREA') return;
+
+            const items = document.querySelectorAll('.match-item');
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                currentIndex = Math.min(currentIndex + 1, items.length - 1);
+                items[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                items[currentIndex].style.boxShadow = '0 0 0 3px #1890ff';
+                setTimeout(() => {
+                    items[currentIndex].style.boxShadow = '';
+                }, 500);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                currentIndex = Math.max(currentIndex - 1, 0);
+                items[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                items[currentIndex].style.boxShadow = '0 0 0 3px #1890ff';
+                setTimeout(() => {
+                    items[currentIndex].style.boxShadow = '';
+                }, 500);
+            } else if (e.key === 'y' || e.key === 'Y') {
+                markItem(currentIndex, 'correct');
+            } else if (e.key === 'n' || e.key === 'N') {
+                markItem(currentIndex, 'wrong');
+            }
+        });
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            showToast('页面加载完成，支持快捷键操作', 'success');
+        });
+    </script>
+</body>
+</html>

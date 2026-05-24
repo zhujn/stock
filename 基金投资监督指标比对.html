@@ -349,22 +349,25 @@
 
         .action-group {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             gap: 6px;
+            margin-bottom: 8px;
         }
 
         .action-btn {
-            height: 36px;
+            height: 32px;
+            min-width: 84px;
             border: 2px solid;
-            border-radius: 6px;
-            font-size: 13px;
+            border-radius: 4px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 3px;
+            flex: 1;
         }
 
         .action-btn:hover {
@@ -395,19 +398,13 @@
         }
 
         .feedback-area {
-            margin-top: 8px;
-        }
-
-        .feedback-label {
-            font-size: 11px;
-            color: #666;
-            margin-bottom: 4px;
+            margin-top: 0px;
         }
 
         .feedback-input {
             width: 100%;
-            height: 45px;
-            padding: 6px 10px;
+            height: 36px;
+            padding: 5px 8px;
             border: 1px solid #d9d9d9;
             border-radius: 4px;
             font-size: 11px;
@@ -451,71 +448,71 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .indicator-name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             color: #1a1a1a;
-            line-height: 1.3;
+            line-height: 1.2;
         }
 
         .indicator-code {
-            font-size: 11px;
+            font-size: 10px;
             color: #999;
             background: #f5f5f5;
-            padding: 2px 6px;
+            padding: 2px 5px;
             border-radius: 3px;
         }
 
         .indicator-section {
-            margin-top: 8px;
-            padding: 8px 10px;
+            margin-top: 6px;
+            padding: 6px 8px;
             background: #f8fafc;
-            border-radius: 6px;
+            border-radius: 4px;
         }
 
         .section-label {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             color: #666;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .section-label.business::before {
             content: "";
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
-            border-radius: 3px;
+            border-radius: 2px;
         }
 
         .section-label.contract::before {
             content: "";
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             background: linear-gradient(135deg, #722ed1 0%, #531dab 100%);
-            border-radius: 3px;
+            border-radius: 2px;
         }
 
         .section-content {
-            font-size: 12px;
+            font-size: 11px;
             color: #555;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         .clause-ref {
             display: inline-block;
-            font-size: 10px;
+            font-size: 9px;
             color: #1890ff;
             background: #e6f7ff;
-            padding: 2px 6px;
-            border-radius: 3px;
-            margin-top: 6px;
+            padding: 1px 5px;
+            border-radius: 2px;
+            margin-top: 4px;
         }
 
         .empty-state {
@@ -640,24 +637,7 @@
             background: #ff4d4f;
         }
 
-        .shortcut-tips {
-            position: fixed;
-            bottom: 90px;
-            right: 32px;
-            background: rgba(0,0,0,0.8);
-            color: #fff;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 12px;
-            line-height: 1.8;
-        }
 
-        .shortcut-tips kbd {
-            background: rgba(255,255,255,0.2);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: monospace;
-        }
 
         .panel-scroll {
             max-height: calc(100vh - 400px);
@@ -868,11 +848,11 @@
         .compare-row {
             display: grid;
             grid-template-columns: 1fr 1fr 240px;
-            gap: 12px;
-            margin-bottom: 16px;
-            padding: 12px;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding: 10px;
             background: #fff;
-            border-radius: 10px;
+            border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
             border: 1px solid #e8e8e8;
             border-left: 4px solid transparent;
@@ -957,14 +937,14 @@
         .headers-row {
             display: grid;
             grid-template-columns: 1fr 1fr 240px;
-            gap: 12px;
-            margin-bottom: 10px;
+            gap: 10px;
+            margin-bottom: 8px;
         }
 
         .header-column {
             background: #f8fafc;
-            border-radius: 6px;
-            padding: 10px 12px;
+            border-radius: 4px;
+            padding: 8px 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -1097,7 +1077,6 @@
                                 </button>
                             </div>
                             <div class="feedback-area">
-                                <div class="feedback-label">反馈说明（可选）</div>
                                 <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
                             </div>
                         </div>
@@ -1141,7 +1120,6 @@
                                 </button>
                             </div>
                             <div class="feedback-area">
-                                <div class="feedback-label">反馈说明（可选）</div>
                                 <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
                             </div>
                         </div>
@@ -1185,7 +1163,6 @@
                                 </button>
                             </div>
                             <div class="feedback-area">
-                                <div class="feedback-label">反馈说明（可选）</div>
                                 <textarea class="feedback-input" placeholder="请说明不匹配原因..."></textarea>
                             </div>
                         </div>
@@ -1229,7 +1206,6 @@
                                 </button>
                             </div>
                             <div class="feedback-area">
-                                <div class="feedback-label">反馈说明（可选）</div>
                                 <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
                             </div>
                         </div>
@@ -1273,7 +1249,6 @@
                                 </button>
                             </div>
                             <div class="feedback-area">
-                                <div class="feedback-label">反馈说明（可选）</div>
                                 <textarea class="feedback-input" placeholder="请确认是否匹配..."></textarea>
                             </div>
                         </div>
@@ -1297,12 +1272,7 @@
         </div>
     </div>
 
-    <div class="shortcut-tips">
-        <div>快捷键：</div>
-        <div><kbd>Y</kbd> 标记正确</div>
-        <div><kbd>N</kbd> 标记错误</div>
-        <div><kbd>↑</kbd><kbd>↓</kbd> 切换条目</div>
-    </div>
+
 
     <div class="toast" id="toast"></div>
 

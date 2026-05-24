@@ -858,6 +858,101 @@
             width: 280px;
             flex-shrink: 0;
         }
+
+        .row-layout {
+            display: block;
+        }
+
+        .compare-row {
+            display: grid;
+            grid-template-columns: 1fr 280px 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .compare-row:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .compare-row.matched {
+            border-left-color: #52c41a;
+        }
+
+        .compare-row.unmatched {
+            border-left-color: #ff4d4f;
+        }
+
+        .compare-row.pending {
+            border-left-color: #faad14;
+        }
+
+        .row-left, .row-right {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .row-center {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .row-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8e8e8;
+        }
+
+        .row-panel-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .row-panel-title.config::before {
+            content: "";
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+            border-radius: 3px;
+        }
+
+        .row-panel-title.ai::before {
+            content: "";
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+            border-radius: 3px;
+        }
+
+        .headers-row {
+            display: grid;
+            grid-template-columns: 1fr 280px 1fr;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .header-column {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
     </style>
 </head>
 <body>
@@ -933,82 +1028,36 @@
                 </div>
             </div>
 
-            <div class="compare-traditional">
-                <div class="compare-grid">
-                    <div class="left-panel">
-                        <div class="panel-header">
-                            <div class="panel-title config">已配置投资监督指标</div>
-                            <div class="panel-count">18条</div>
-                        </div>
+            <div class="row-layout">
+                <div class="headers-row">
+                    <div class="header-column">
+                        <div class="panel-title config">已配置投资监督指标</div>
+                        <div class="panel-count">18条</div>
+                    </div>
+                    <div class="header-column">
+                        <div class="panel-title" style="gap: 6px; display: flex; align-items: center; font-size: 13px; font-weight: 700; color: #666;">匹配状态</div>
+                    </div>
+                    <div class="header-column">
+                        <div class="panel-title ai">AI识别合同指标</div>
+                        <div class="panel-count">16条</div>
+                    </div>
+                </div>
 
-                        <div class="indicator-card matched" data-index="0">
-                            <div class="indicator-header">
-                                <div class="indicator-name">单一股票持仓比例限制</div>
-                                <div class="indicator-code">INV-001</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label business">业务涵义</div>
-                                <div class="section-content">
-                                    控制基金对单一股票的投资集中度风险，防止因个股波动对基金净值造成过大影响。当持仓比例超过设定阈值时，系统应触发预警。
-                                </div>
-                            </div>
+                <div class="compare-row matched" data-index="0">
+                    <div class="row-left">
+                        <div class="indicator-header">
+                            <div class="indicator-name">单一股票持仓比例限制</div>
+                            <div class="indicator-code">INV-001</div>
                         </div>
-
-                        <div class="indicator-card matched" data-index="1">
-                            <div class="indicator-header">
-                                <div class="indicator-name">行业集中度限制</div>
-                                <div class="indicator-code">INV-002</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label business">业务涵义</div>
-                                <div class="section-content">
-                                    限制基金在单一行业的投资占比，分散行业系统性风险。适用于周期性较强或政策敏感型行业的风险管控。
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="indicator-card unmatched" data-index="2">
-                            <div class="indicator-header">
-                                <div class="indicator-name">关联交易限制</div>
-                                <div class="indicator-code">INV-003</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label business">业务涵义</div>
-                                <div class="section-content">
-                                    防范基金与关联方之间的利益输送风险，确保投资决策的独立性和公允性。需监控与基金管理人、托管人关联方的交易行为。
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="indicator-card matched" data-index="3">
-                            <div class="indicator-header">
-                                <div class="indicator-name">杠杆比例上限</div>
-                                <div class="indicator-code">INV-004</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label business">业务涵义</div>
-                                <div class="section-content">
-                                    控制基金整体杠杆水平，防范过度杠杆导致的流动性风险和净值波动风险。包括回购融资、衍生品等形成的杠杆。
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="indicator-card pending" data-index="4">
-                            <div class="indicator-header">
-                                <div class="indicator-name">流动性资产比例</div>
-                                <div class="indicator-code">INV-005</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label business">业务涵义</div>
-                                <div class="section-content">
-                                    确保基金保持足够的流动性资产以应对赎回压力，维护基金运作的稳定性。流动性资产包括现金、国债等高流动性金融工具。
-                                </div>
+                        <div class="indicator-section">
+                            <div class="section-label business">业务涵义</div>
+                            <div class="section-content">
+                                控制基金对单一股票的投资集中度风险，防止因个股波动对基金净值造成过大影响。当持仓比例超过设定阈值时，系统应触发预警。
                             </div>
                         </div>
                     </div>
-
-                    <div class="center-panel">
-                        <div class="match-item" data-index="0">
+                    <div class="row-center">
+                        <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="0">
                             <div class="match-status matched">
                                 <div class="status-badge">
                                     <span>✓</span>
@@ -1029,8 +1078,37 @@
                                 <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
                             </div>
                         </div>
+                    </div>
+                    <div class="row-right">
+                        <div class="indicator-header">
+                            <div class="indicator-name">个股持仓上限控制</div>
+                            <div class="indicator-code">AI-001</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "本基金投资于单一股票的比例不得超过基金资产净值的10%，如因被动超标需在20个交易日内调整至合规水平。"
+                            </div>
+                            <span class="clause-ref">第12条第3款</span>
+                        </div>
+                    </div>
+                </div>
 
-                        <div class="match-item" data-index="1">
+                <div class="compare-row matched" data-index="1">
+                    <div class="row-left">
+                        <div class="indicator-header">
+                            <div class="indicator-name">行业集中度限制</div>
+                            <div class="indicator-code">INV-002</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label business">业务涵义</div>
+                            <div class="section-content">
+                                限制基金在单一行业的投资占比，分散行业系统性风险。适用于周期性较强或政策敏感型行业的风险管控。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-center">
+                        <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="1">
                             <div class="match-status matched">
                                 <div class="status-badge">
                                     <span>✓</span>
@@ -1051,8 +1129,37 @@
                                 <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
                             </div>
                         </div>
+                    </div>
+                    <div class="row-right">
+                        <div class="indicator-header">
+                            <div class="indicator-name">行业投资集中度管理</div>
+                            <div class="indicator-code">AI-002</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "基金投资于单一行业的比例原则上不超过基金资产净值的30%，对于景气度较高的行业可适当放宽至35%。"
+                            </div>
+                            <span class="clause-ref">第12条第4款</span>
+                        </div>
+                    </div>
+                </div>
 
-                        <div class="match-item" data-index="2">
+                <div class="compare-row unmatched" data-index="2">
+                    <div class="row-left">
+                        <div class="indicator-header">
+                            <div class="indicator-name">关联交易限制</div>
+                            <div class="indicator-code">INV-003</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label business">业务涵义</div>
+                            <div class="section-content">
+                                防范基金与关联方之间的利益输送风险，确保投资决策的独立性和公允性。需监控与基金管理人、托管人关联方的交易行为。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-center">
+                        <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="2">
                             <div class="match-status unmatched">
                                 <div class="status-badge">
                                     <span>✗</span>
@@ -1073,8 +1180,37 @@
                                 <textarea class="feedback-input" placeholder="请说明不匹配原因..."></textarea>
                             </div>
                         </div>
+                    </div>
+                    <div class="row-right">
+                        <div class="indicator-header">
+                            <div class="indicator-name">关联方交易监控</div>
+                            <div class="indicator-code">AI-003</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "本基金不得与基金管理人、基金托管人及其控股股东进行交易。"
+                            </div>
+                            <span class="clause-ref">第15条第1款</span>
+                        </div>
+                    </div>
+                </div>
 
-                        <div class="match-item" data-index="3">
+                <div class="compare-row matched" data-index="3">
+                    <div class="row-left">
+                        <div class="indicator-header">
+                            <div class="indicator-name">杠杆比例上限</div>
+                            <div class="indicator-code">INV-004</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label business">业务涵义</div>
+                            <div class="section-content">
+                                控制基金整体杠杆水平，防范过度杠杆导致的流动性风险和净值波动风险。包括回购融资、衍生品等形成的杠杆。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-center">
+                        <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="3">
                             <div class="match-status matched">
                                 <div class="status-badge">
                                     <span>✓</span>
@@ -1095,8 +1231,37 @@
                                 <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
                             </div>
                         </div>
+                    </div>
+                    <div class="row-right">
+                        <div class="indicator-header">
+                            <div class="indicator-name">融资杠杆比例控制</div>
+                            <div class="indicator-code">AI-004</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "本基金的总杠杆比例（包括回购融资、衍生品等）不得超过基金资产净值的140%，确保基金运作稳健。"
+                            </div>
+                            <span class="clause-ref">第18条第2款</span>
+                        </div>
+                    </div>
+                </div>
 
-                        <div class="match-item" data-index="4">
+                <div class="compare-row pending" data-index="4">
+                    <div class="row-left">
+                        <div class="indicator-header">
+                            <div class="indicator-name">流动性资产比例</div>
+                            <div class="indicator-code">INV-005</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label business">业务涵义</div>
+                            <div class="section-content">
+                                确保基金保持足够的流动性资产以应对赎回压力，维护基金运作的稳定性。流动性资产包括现金、国债等高流动性金融工具。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-center">
+                        <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="4">
                             <div class="match-status pending">
                                 <div class="status-badge">
                                     <span>⏳</span>
@@ -1118,350 +1283,22 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="right-panel">
-                        <div class="panel-header">
-                            <div class="panel-title ai">AI识别合同指标</div>
-                            <div class="panel-count">16条</div>
+                    <div class="row-right">
+                        <div class="indicator-header">
+                            <div class="indicator-name">高流动性资产配置要求</div>
+                            <div class="indicator-code">AI-005</div>
                         </div>
-
-                        <div class="indicator-card matched" data-index="0">
-                            <div class="indicator-header">
-                                <div class="indicator-name">个股持仓上限控制</div>
-                                <div class="indicator-code">AI-001</div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "基金应保持不低于资产净值5%的现金或到期日在一年以内的政府债券，以满足赎回需求。"
                             </div>
-                            <div class="indicator-section">
-                                <div class="section-label contract">合同条款原文</div>
-                                <div class="section-content">
-                                    "本基金投资于单一股票的比例不得超过基金资产净值的10%，如因被动超标需在20个交易日内调整至合规水平。"
-                                </div>
-                                <span class="clause-ref">第12条第3款</span>
-                            </div>
-                        </div>
-
-                        <div class="indicator-card matched" data-index="1">
-                            <div class="indicator-header">
-                                <div class="indicator-name">行业投资集中度管理</div>
-                                <div class="indicator-code">AI-002</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label contract">合同条款原文</div>
-                                <div class="section-content">
-                                    "基金投资于单一行业的比例原则上不超过基金资产净值的30%，对于景气度较高的行业可适当放宽至35%。"
-                                </div>
-                                <span class="clause-ref">第12条第4款</span>
-                            </div>
-                        </div>
-
-                        <div class="indicator-card unmatched" data-index="2">
-                            <div class="indicator-header">
-                                <div class="indicator-name">关联方交易监控</div>
-                                <div class="indicator-code">AI-003</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label contract">合同条款原文</div>
-                                <div class="section-content">
-                                    "本基金不得与基金管理人、基金托管人及其控股股东进行交易。"
-                                </div>
-                                <span class="clause-ref">第15条第1款</span>
-                            </div>
-                        </div>
-
-                        <div class="indicator-card matched" data-index="3">
-                            <div class="indicator-header">
-                                <div class="indicator-name">融资杠杆比例控制</div>
-                                <div class="indicator-code">AI-004</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label contract">合同条款原文</div>
-                                <div class="section-content">
-                                    "本基金的总杠杆比例（包括回购融资、衍生品等）不得超过基金资产净值的140%，确保基金运作稳健。"
-                                </div>
-                                <span class="clause-ref">第18条第2款</span>
-                            </div>
-                        </div>
-
-                        <div class="indicator-card pending" data-index="4">
-                            <div class="indicator-header">
-                                <div class="indicator-name">高流动性资产配置要求</div>
-                                <div class="indicator-code">AI-005</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label contract">合同条款原文</div>
-                                <div class="section-content">
-                                    "基金应保持不低于资产净值5%的现金或到期日在一年以内的政府债券，以满足赎回需求。"
-                                </div>
-                                <span class="clause-ref">第11条第5款</span>
-                            </div>
+                            <span class="clause-ref">第11条第5款</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="compare-new-grid" id="newCompareLayout">
-                <div class="scroll-sync-container">
-                    <div class="scroll-sync-left" id="leftScroll">
-                        <div class="panel-header" style="position: sticky; top: 0; background: #f8fafc; z-index: 10;">
-                            <div class="panel-title config">已配置投资监督指标</div>
-                            <div class="panel-count">18条</div>
-                        </div>
-
-                        <div class="indicator-card matched" data-index="0" data-type="config">
-                            <div class="indicator-header">
-                                <div class="indicator-name">单一股票持仓比例限制</div>
-                                <div class="indicator-code">INV-001</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label business">业务涵义</div>
-                                <div class="section-content">
-                                    控制基金对单一股票的投资集中度风险，防止因个股波动对基金净值造成过大影响。当持仓比例超过设定阈值时，系统应触发预警。
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="indicator-card matched" data-index="1" data-type="config">
-                            <div class="indicator-header">
-                                <div class="indicator-name">行业集中度限制</div>
-                                <div class="indicator-code">INV-002</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label business">业务涵义</div>
-                                <div class="section-content">
-                                    限制基金在单一行业的投资占比，分散行业系统性风险。适用于周期性较强或政策敏感型行业的风险管控。
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="indicator-card unmatched" data-index="2" data-type="config">
-                            <div class="indicator-header">
-                                <div class="indicator-name">关联交易限制</div>
-                                <div class="indicator-code">INV-003</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label business">业务涵义</div>
-                                <div class="section-content">
-                                    防范基金与关联方之间的利益输送风险，确保投资决策的独立性和公允性。需监控与基金管理人、托管人关联方的交易行为。
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="indicator-card matched" data-index="3" data-type="config">
-                            <div class="indicator-header">
-                                <div class="indicator-name">杠杆比例上限</div>
-                                <div class="indicator-code">INV-004</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label business">业务涵义</div>
-                                <div class="section-content">
-                                    控制基金整体杠杆水平，防范过度杠杆导致的流动性风险和净值波动风险。包括回购融资、衍生品等形成的杠杆。
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="indicator-card pending" data-index="4" data-type="config">
-                            <div class="indicator-header">
-                                <div class="indicator-name">流动性资产比例</div>
-                                <div class="indicator-code">INV-005</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label business">业务涵义</div>
-                                <div class="section-content">
-                                    确保基金保持足够的流动性资产以应对赎回压力，维护基金运作的稳定性。流动性资产包括现金、国债等高流动性金融工具。
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="sync-center">
-                        <div class="match-item" data-index="0">
-                            <div class="match-status matched">
-                                <div class="status-badge">
-                                    <span>✓</span>
-                                    <span>高度匹配</span>
-                                </div>
-                                <div class="similarity-score">95%</div>
-                            </div>
-                            <div class="action-group">
-                                <button class="action-btn btn-correct active" onclick="markItem(0, 'correct')">
-                                    <span>✓</span> 识别正确
-                                </button>
-                                <button class="action-btn btn-wrong" onclick="markItem(0, 'wrong')">
-                                    <span>✗</span> 识别错误
-                                </button>
-                            </div>
-                            <div class="feedback-area">
-                                <div class="feedback-label">反馈说明（可选）</div>
-                                <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
-                            </div>
-                        </div>
-
-                        <div class="match-item" data-index="1">
-                            <div class="match-status matched">
-                                <div class="status-badge">
-                                    <span>✓</span>
-                                    <span>高度匹配</span>
-                                </div>
-                                <div class="similarity-score">92%</div>
-                            </div>
-                            <div class="action-group">
-                                <button class="action-btn btn-correct active" onclick="markItem(1, 'correct')">
-                                    <span>✓</span> 识别正确
-                                </button>
-                                <button class="action-btn btn-wrong" onclick="markItem(1, 'wrong')">
-                                    <span>✗</span> 识别错误
-                                </button>
-                            </div>
-                            <div class="feedback-area">
-                                <div class="feedback-label">反馈说明（可选）</div>
-                                <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
-                            </div>
-                        </div>
-
-                        <div class="match-item" data-index="2">
-                            <div class="match-status unmatched">
-                                <div class="status-badge">
-                                    <span>✗</span>
-                                    <span>不匹配</span>
-                                </div>
-                                <div class="similarity-score">45%</div>
-                            </div>
-                            <div class="action-group">
-                                <button class="action-btn btn-correct" onclick="markItem(2, 'correct')">
-                                    <span>✓</span> 识别正确
-                                </button>
-                                <button class="action-btn btn-wrong active" onclick="markItem(2, 'wrong')">
-                                    <span>✗</span> 识别错误
-                                </button>
-                            </div>
-                            <div class="feedback-area">
-                                <div class="feedback-label">反馈说明（可选）</div>
-                                <textarea class="feedback-input" placeholder="请说明不匹配原因..."></textarea>
-                            </div>
-                        </div>
-
-                        <div class="match-item" data-index="3">
-                            <div class="match-status matched">
-                                <div class="status-badge">
-                                    <span>✓</span>
-                                    <span>高度匹配</span>
-                                </div>
-                                <div class="similarity-score">88%</div>
-                            </div>
-                            <div class="action-group">
-                                <button class="action-btn btn-correct active" onclick="markItem(3, 'correct')">
-                                    <span>✓</span> 识别正确
-                                </button>
-                                <button class="action-btn btn-wrong" onclick="markItem(3, 'wrong')">
-                                    <span>✗</span> 识别错误
-                                </button>
-                            </div>
-                            <div class="feedback-area">
-                                <div class="feedback-label">反馈说明（可选）</div>
-                                <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
-                            </div>
-                        </div>
-
-                        <div class="match-item" data-index="4">
-                            <div class="match-status pending">
-                                <div class="status-badge">
-                                    <span>⏳</span>
-                                    <span>待确认</span>
-                                </div>
-                                <div class="similarity-score">72%</div>
-                            </div>
-                            <div class="action-group">
-                                <button class="action-btn btn-correct" onclick="markItem(4, 'correct')">
-                                    <span>✓</span> 识别正确
-                                </button>
-                                <button class="action-btn btn-wrong" onclick="markItem(4, 'wrong')">
-                                    <span>✗</span> 识别错误
-                                </button>
-                            </div>
-                            <div class="feedback-area">
-                                <div class="feedback-label">反馈说明（可选）</div>
-                                <textarea class="feedback-input" placeholder="请确认是否匹配..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="scroll-sync-right" id="rightScroll">
-                        <div class="panel-header" style="position: sticky; top: 0; background: #f8fafc; z-index: 10;">
-                            <div class="panel-title ai">AI识别合同指标</div>
-                            <div class="panel-count">16条</div>
-                        </div>
-
-                        <div class="indicator-card matched" data-index="0" data-type="ai">
-                            <div class="indicator-header">
-                                <div class="indicator-name">个股持仓上限控制</div>
-                                <div class="indicator-code">AI-001</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label contract">合同条款原文</div>
-                                <div class="section-content">
-                                    "本基金投资于单一股票的比例不得超过基金资产净值的10%，如因被动超标需在20个交易日内调整至合规水平。"
-                                </div>
-                                <span class="clause-ref">第12条第3款</span>
-                            </div>
-                        </div>
-
-                        <div class="indicator-card matched" data-index="1" data-type="ai">
-                            <div class="indicator-header">
-                                <div class="indicator-name">行业投资集中度管理</div>
-                                <div class="indicator-code">AI-002</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label contract">合同条款原文</div>
-                                <div class="section-content">
-                                    "基金投资于单一行业的比例原则上不超过基金资产净值的30%，对于景气度较高的行业可适当放宽至35%。"
-                                </div>
-                                <span class="clause-ref">第12条第4款</span>
-                            </div>
-                        </div>
-
-                        <div class="indicator-card unmatched" data-index="2" data-type="ai">
-                            <div class="indicator-header">
-                                <div class="indicator-name">关联方交易监控</div>
-                                <div class="indicator-code">AI-003</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label contract">合同条款原文</div>
-                                <div class="section-content">
-                                    "本基金不得与基金管理人、基金托管人及其控股股东进行交易。"
-                                </div>
-                                <span class="clause-ref">第15条第1款</span>
-                            </div>
-                        </div>
-
-                        <div class="indicator-card matched" data-index="3" data-type="ai">
-                            <div class="indicator-header">
-                                <div class="indicator-name">融资杠杆比例控制</div>
-                                <div class="indicator-code">AI-004</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label contract">合同条款原文</div>
-                                <div class="section-content">
-                                    "本基金的总杠杆比例（包括回购融资、衍生品等）不得超过基金资产净值的140%，确保基金运作稳健。"
-                                </div>
-                                <span class="clause-ref">第18条第2款</span>
-                            </div>
-                        </div>
-
-                        <div class="indicator-card pending" data-index="4" data-type="ai">
-                            <div class="indicator-header">
-                                <div class="indicator-name">高流动性资产配置要求</div>
-                                <div class="indicator-code">AI-005</div>
-                            </div>
-                            <div class="indicator-section">
-                                <div class="section-label contract">合同条款原文</div>
-                                <div class="section-content">
-                                    "基金应保持不低于资产净值5%的现金或到期日在一年以内的政府债券，以满足赎回需求。"
-                                </div>
-                                <span class="clause-ref">第11条第5款</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -1516,10 +1353,10 @@
         }
 
         function updateCardStyles(index, type) {
-            const leftCards = document.querySelectorAll(`.indicator-card[data-index="${index}"]`);
-            leftCards.forEach(card => {
-                card.classList.remove('matched', 'unmatched', 'pending');
-                card.classList.add(type === 'correct' ? 'matched' : 'unmatched');
+            const rows = document.querySelectorAll(`.compare-row[data-index="${index}"]`);
+            rows.forEach(row => {
+                row.classList.remove('matched', 'unmatched', 'pending');
+                row.classList.add(type === 'correct' ? 'matched' : 'unmatched');
             });
         }
 
@@ -1539,34 +1376,17 @@
             });
             event.target.classList.add('active');
 
-            const items = document.querySelectorAll('.match-item');
-            items.forEach(item => {
-                const status = item.querySelector('.match-status');
+            const rows = document.querySelectorAll('.compare-row');
+            rows.forEach(row => {
+                const matchItem = row.querySelector('.match-item');
+                const status = matchItem.querySelector('.match-status');
                 let show = true;
 
                 if (type === 'matched' && !status.classList.contains('matched')) show = false;
                 if (type === 'unmatched' && !status.classList.contains('unmatched')) show = false;
                 if (type === 'pending' && !status.classList.contains('pending')) show = false;
 
-                item.style.display = show ? 'block' : 'none';
-            });
-
-            const configCards = document.querySelectorAll('.indicator-card[data-type="config"]');
-            configCards.forEach(card => {
-                const index = card.getAttribute('data-index');
-                const matchItem = document.querySelector(`.match-item[data-index="${index}"]`);
-                if (matchItem) {
-                    card.style.display = matchItem.style.display === 'none' ? 'none' : 'block';
-                }
-            });
-
-            const aiCards = document.querySelectorAll('.indicator-card[data-type="ai"]');
-            aiCards.forEach(card => {
-                const index = card.getAttribute('data-index');
-                const matchItem = document.querySelector(`.match-item[data-index="${index}"]`);
-                if (matchItem) {
-                    card.style.display = matchItem.style.display === 'none' ? 'none' : 'block';
-                }
+                row.style.display = show ? 'grid' : 'none';
             });
 
             showToast(`已筛选：${type === 'all' ? '全部' : type === 'matched' ? '匹配' : type === 'unmatched' ? '不匹配' : '待确认'}`);
@@ -1598,35 +1418,35 @@
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'TEXTAREA') return;
 
-            const items = document.querySelectorAll('.match-item');
-            const visibleItems = Array.from(items).filter(item => item.style.display !== 'none');
+            const rows = document.querySelectorAll('.compare-row');
+            const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
 
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
-                currentIndex = Math.min(currentIndex + 1, visibleItems.length - 1);
-                visibleItems[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                visibleItems[currentIndex].style.boxShadow = '0 0 0 3px #1890ff';
+                currentIndex = Math.min(currentIndex + 1, visibleRows.length - 1);
+                visibleRows[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                visibleRows[currentIndex].style.boxShadow = '0 0 0 3px #1890ff';
                 setTimeout(() => {
-                    visibleItems[currentIndex].style.boxShadow = '';
+                    visibleRows[currentIndex].style.boxShadow = '';
                 }, 500);
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 currentIndex = Math.max(currentIndex - 1, 0);
-                visibleItems[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                visibleItems[currentIndex].style.boxShadow = '0 0 0 3px #1890ff';
+                visibleRows[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                visibleRows[currentIndex].style.boxShadow = '0 0 0 3px #1890ff';
                 setTimeout(() => {
-                    visibleItems[currentIndex].style.boxShadow = '';
+                    visibleRows[currentIndex].style.boxShadow = '';
                 }, 500);
             } else if (e.key === 'y' || e.key === 'Y') {
-                const visibleItems = Array.from(items).filter(item => item.style.display !== 'none');
-                if (visibleItems[currentIndex]) {
-                    const index = parseInt(visibleItems[currentIndex].getAttribute('data-index'));
+                const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
+                if (visibleRows[currentIndex]) {
+                    const index = parseInt(visibleRows[currentIndex].getAttribute('data-index'));
                     markItem(index, 'correct');
                 }
             } else if (e.key === 'n' || e.key === 'N') {
-                const visibleItems = Array.from(items).filter(item => item.style.display !== 'none');
-                if (visibleItems[currentIndex]) {
-                    const index = parseInt(visibleItems[currentIndex].getAttribute('data-index'));
+                const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
+                if (visibleRows[currentIndex]) {
+                    const index = parseInt(visibleRows[currentIndex].getAttribute('data-index'));
                     markItem(index, 'wrong');
                 }
             }

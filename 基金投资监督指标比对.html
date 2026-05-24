@@ -13,7 +13,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f7fa;
             min-height: 100vh;
             padding: 20px;
         }
@@ -28,7 +28,8 @@
             border-radius: 12px;
             padding: 24px 32px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid #e8e8e8;
         }
 
         .header-title {
@@ -153,7 +154,8 @@
             background: #fff;
             border-radius: 12px;
             padding: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid #e8e8e8;
         }
 
         .section-header {
@@ -865,13 +867,14 @@
 
         .compare-row {
             display: grid;
-            grid-template-columns: 1fr 260px 1fr;
+            grid-template-columns: 1fr 1fr 240px;
             gap: 12px;
             margin-bottom: 16px;
             padding: 12px;
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #e8e8e8;
             border-left: 4px solid transparent;
             transition: all 0.3s;
         }
@@ -892,10 +895,23 @@
             border-left-color: #faad14;
         }
 
-        .row-left, .row-right {
+        .row-left {
             background: #f8fafc;
             border-radius: 6px;
             padding: 10px;
+        }
+
+        .row-center {
+            background: #f8fafc;
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        .row-right {
+            background: #fafbfc;
+            border-radius: 6px;
+            padding: 10px;
+            border: 1px solid #e8e8e8;
         }
 
         .row-center {
@@ -940,7 +956,7 @@
 
         .headers-row {
             display: grid;
-            grid-template-columns: 1fr 260px 1fr;
+            grid-template-columns: 1fr 1fr 240px;
             gap: 12px;
             margin-bottom: 10px;
         }
@@ -952,6 +968,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            border: 1px solid #e8e8e8;
         }
     </style>
 </head>
@@ -1035,11 +1052,11 @@
                         <div class="panel-count">18条</div>
                     </div>
                     <div class="header-column">
-                        <div class="panel-title" style="gap: 6px; display: flex; align-items: center; font-size: 13px; font-weight: 700; color: #666;">操作</div>
-                    </div>
-                    <div class="header-column">
                         <div class="panel-title ai">AI识别合同指标</div>
                         <div class="panel-count">16条</div>
+                    </div>
+                    <div class="header-column">
+                        <div class="panel-title" style="gap: 6px; display: flex; align-items: center; font-size: 13px; font-weight: 700; color: #666;">操作</div>
                     </div>
                 </div>
 
@@ -1057,6 +1074,19 @@
                         </div>
                     </div>
                     <div class="row-center">
+                        <div class="indicator-header">
+                            <div class="indicator-name">个股持仓上限控制</div>
+                            <div class="indicator-code">AI-001</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "本基金投资于单一股票的比例不得超过基金资产净值的10%，如因被动超标需在20个交易日内调整至合规水平。"
+                            </div>
+                            <span class="clause-ref">第12条第3款</span>
+                        </div>
+                    </div>
+                    <div class="row-right">
                         <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="0">
                             <div class="action-group">
                                 <button class="action-btn btn-correct active" onclick="markItem(0, 'correct')">
@@ -1070,19 +1100,6 @@
                                 <div class="feedback-label">反馈说明（可选）</div>
                                 <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row-right">
-                        <div class="indicator-header">
-                            <div class="indicator-name">个股持仓上限控制</div>
-                            <div class="indicator-code">AI-001</div>
-                        </div>
-                        <div class="indicator-section">
-                            <div class="section-label contract">合同条款原文</div>
-                            <div class="section-content">
-                                "本基金投资于单一股票的比例不得超过基金资产净值的10%，如因被动超标需在20个交易日内调整至合规水平。"
-                            </div>
-                            <span class="clause-ref">第12条第3款</span>
                         </div>
                     </div>
                 </div>
@@ -1101,6 +1118,19 @@
                         </div>
                     </div>
                     <div class="row-center">
+                        <div class="indicator-header">
+                            <div class="indicator-name">行业投资集中度管理</div>
+                            <div class="indicator-code">AI-002</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "基金投资于单一行业的比例原则上不超过基金资产净值的30%，对于景气度较高的行业可适当放宽至35%。"
+                            </div>
+                            <span class="clause-ref">第12条第4款</span>
+                        </div>
+                    </div>
+                    <div class="row-right">
                         <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="1">
                             <div class="action-group">
                                 <button class="action-btn btn-correct active" onclick="markItem(1, 'correct')">
@@ -1114,19 +1144,6 @@
                                 <div class="feedback-label">反馈说明（可选）</div>
                                 <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row-right">
-                        <div class="indicator-header">
-                            <div class="indicator-name">行业投资集中度管理</div>
-                            <div class="indicator-code">AI-002</div>
-                        </div>
-                        <div class="indicator-section">
-                            <div class="section-label contract">合同条款原文</div>
-                            <div class="section-content">
-                                "基金投资于单一行业的比例原则上不超过基金资产净值的30%，对于景气度较高的行业可适当放宽至35%。"
-                            </div>
-                            <span class="clause-ref">第12条第4款</span>
                         </div>
                     </div>
                 </div>
@@ -1145,6 +1162,19 @@
                         </div>
                     </div>
                     <div class="row-center">
+                        <div class="indicator-header">
+                            <div class="indicator-name">关联方交易监控</div>
+                            <div class="indicator-code">AI-003</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "本基金不得与基金管理人、基金托管人及其控股股东进行交易。"
+                            </div>
+                            <span class="clause-ref">第15条第1款</span>
+                        </div>
+                    </div>
+                    <div class="row-right">
                         <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="2">
                             <div class="action-group">
                                 <button class="action-btn btn-correct" onclick="markItem(2, 'correct')">
@@ -1158,19 +1188,6 @@
                                 <div class="feedback-label">反馈说明（可选）</div>
                                 <textarea class="feedback-input" placeholder="请说明不匹配原因..."></textarea>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row-right">
-                        <div class="indicator-header">
-                            <div class="indicator-name">关联方交易监控</div>
-                            <div class="indicator-code">AI-003</div>
-                        </div>
-                        <div class="indicator-section">
-                            <div class="section-label contract">合同条款原文</div>
-                            <div class="section-content">
-                                "本基金不得与基金管理人、基金托管人及其控股股东进行交易。"
-                            </div>
-                            <span class="clause-ref">第15条第1款</span>
                         </div>
                     </div>
                 </div>
@@ -1189,6 +1206,19 @@
                         </div>
                     </div>
                     <div class="row-center">
+                        <div class="indicator-header">
+                            <div class="indicator-name">融资杠杆比例控制</div>
+                            <div class="indicator-code">AI-004</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "本基金的总杠杆比例（包括回购融资、衍生品等）不得超过基金资产净值的140%，确保基金运作稳健。"
+                            </div>
+                            <span class="clause-ref">第18条第2款</span>
+                        </div>
+                    </div>
+                    <div class="row-right">
                         <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="3">
                             <div class="action-group">
                                 <button class="action-btn btn-correct active" onclick="markItem(3, 'correct')">
@@ -1202,19 +1232,6 @@
                                 <div class="feedback-label">反馈说明（可选）</div>
                                 <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row-right">
-                        <div class="indicator-header">
-                            <div class="indicator-name">融资杠杆比例控制</div>
-                            <div class="indicator-code">AI-004</div>
-                        </div>
-                        <div class="indicator-section">
-                            <div class="section-label contract">合同条款原文</div>
-                            <div class="section-content">
-                                "本基金的总杠杆比例（包括回购融资、衍生品等）不得超过基金资产净值的140%，确保基金运作稳健。"
-                            </div>
-                            <span class="clause-ref">第18条第2款</span>
                         </div>
                     </div>
                 </div>
@@ -1233,6 +1250,19 @@
                         </div>
                     </div>
                     <div class="row-center">
+                        <div class="indicator-header">
+                            <div class="indicator-name">高流动性资产配置要求</div>
+                            <div class="indicator-code">AI-005</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "基金应保持不低于资产净值5%的现金或到期日在一年以内的政府债券，以满足赎回需求。"
+                            </div>
+                            <span class="clause-ref">第11条第5款</span>
+                        </div>
+                    </div>
+                    <div class="row-right">
                         <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="4">
                             <div class="action-group">
                                 <button class="action-btn btn-correct" onclick="markItem(4, 'correct')">
@@ -1246,19 +1276,6 @@
                                 <div class="feedback-label">反馈说明（可选）</div>
                                 <textarea class="feedback-input" placeholder="请确认是否匹配..."></textarea>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row-right">
-                        <div class="indicator-header">
-                            <div class="indicator-name">高流动性资产配置要求</div>
-                            <div class="indicator-code">AI-005</div>
-                        </div>
-                        <div class="indicator-section">
-                            <div class="section-label contract">合同条款原文</div>
-                            <div class="section-content">
-                                "基金应保持不低于资产净值5%的现金或到期日在一年以内的政府债券，以满足赎回需求。"
-                            </div>
-                            <span class="clause-ref">第11条第5款</span>
                         </div>
                     </div>
                 </div>

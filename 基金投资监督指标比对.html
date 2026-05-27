@@ -950,6 +950,43 @@
             justify-content: space-between;
             border: 1px solid #e8e8e8;
         }
+
+        .compare-row.left-only {
+            border-left-color: #fa8c16;
+        }
+
+        .compare-row.right-only {
+            border-left-color: #722ed1;
+        }
+
+        .empty-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 100px;
+            color: #999;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .empty-indicator-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            opacity: 0.5;
+        }
+
+        .empty-indicator-text {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .empty-indicator-hint {
+            font-size: 11px;
+            margin-top: 4px;
+            color: #bfbfbf;
+        }
     </style>
 </head>
 <body>
@@ -1022,6 +1059,8 @@
                     <button class="filter-tab" onclick="filterItems('matched')">✓ 匹配</button>
                     <button class="filter-tab" onclick="filterItems('unmatched')">✗ 不匹配</button>
                     <button class="filter-tab" onclick="filterItems('pending')">⏳ 待确认</button>
+                    <button class="filter-tab" onclick="filterItems('left-only')">← 独有</button>
+                    <button class="filter-tab" onclick="filterItems('right-only')">→ 独有</button>
                 </div>
             </div>
 
@@ -1254,6 +1293,81 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="compare-row left-only" data-index="5">
+                    <div class="row-left">
+                        <div class="indicator-header">
+                            <div class="indicator-name">重大关联交易审批流程</div>
+                            <div class="indicator-code">INV-006</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label business">业务涵义</div>
+                            <div class="section-content">
+                                规范重大关联交易的决策审批流程，确保交易价格公允合理，保护基金持有人利益。超过一定金额的关联交易需经专门委员会审批。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-center">
+                        <div class="empty-indicator">
+                            <div class="empty-indicator-icon">🔍</div>
+                            <div class="empty-indicator-text">暂无匹配指标</div>
+                            <div class="empty-indicator-hint">AI未识别到对应的合同条款</div>
+                        </div>
+                    </div>
+                    <div class="row-right">
+                        <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="5">
+                            <div class="action-group">
+                                <button class="action-btn btn-correct" onclick="markItem(5, 'correct')">
+                                    <span>✓</span> 确认无匹配
+                                </button>
+                                <button class="action-btn btn-wrong" onclick="markItem(5, 'wrong')">
+                                    <span>✗</span> 识别错误
+                                </button>
+                            </div>
+                            <div class="feedback-area">
+                                <textarea class="feedback-input" placeholder="请补充说明..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compare-row right-only" data-index="6">
+                    <div class="row-left">
+                        <div class="empty-indicator">
+                            <div class="empty-indicator-icon">📋</div>
+                            <div class="empty-indicator-text">暂无配置指标</div>
+                            <div class="empty-indicator-hint">未在配置清单中找到对应指标</div>
+                        </div>
+                    </div>
+                    <div class="row-center">
+                        <div class="indicator-header">
+                            <div class="indicator-name">基金净值波动预警机制</div>
+                            <div class="indicator-code">AI-006</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "当基金单位净值日跌幅超过5%或连续三个交易日累计跌幅超过8%时，管理人应在两个工作日内向托管人报告并说明原因。"
+                            </div>
+                            <span class="clause-ref">第20条第3款</span>
+                        </div>
+                    </div>
+                    <div class="row-right">
+                        <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="6">
+                            <div class="action-group">
+                                <button class="action-btn btn-correct" onclick="markItem(6, 'correct')">
+                                    <span>✓</span> 需新增配置
+                                </button>
+                                <button class="action-btn btn-wrong" onclick="markItem(6, 'wrong')">
+                                    <span>✗</span> 无需配置
+                                </button>
+                            </div>
+                            <div class="feedback-area">
+                                <textarea class="feedback-input" placeholder="请补充说明..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -1261,7 +1375,7 @@
 
     <div class="bottom-bar">
         <div class="progress-info">
-            <span class="progress-text">已标记 <strong id="markedNum">0</strong> / 18 条指标</span>
+            <span class="progress-text">已标记 <strong id="markedNum">0</strong> / <span id="totalItems">7</span> 条指标</span>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressBar" style="width: 0%;"></div>
             </div>
@@ -1304,6 +1418,9 @@
         function updateCardStyles(index, type) {
             const rows = document.querySelectorAll(`.compare-row[data-index="${index}"]`);
             rows.forEach(row => {
+                if (row.classList.contains('left-only') || row.classList.contains('right-only')) {
+                    return;
+                }
                 row.classList.remove('matched', 'unmatched', 'pending');
                 row.classList.add(type === 'correct' ? 'matched' : 'unmatched');
             });
@@ -1311,10 +1428,11 @@
 
         function updateProgress() {
             const marked = markedItems.size;
-            const total = 18;
+            const total = document.querySelectorAll('.compare-row').length;
             const percent = (marked / total * 100).toFixed(0);
 
             document.getElementById('markedNum').textContent = marked;
+            document.getElementById('totalItems').textContent = total;
             document.getElementById('markedCount').textContent = `${marked}/${total}`;
             document.getElementById('progressBar').style.width = percent + '%';
         }
@@ -1332,11 +1450,20 @@
                 if (type === 'matched' && !row.classList.contains('matched')) show = false;
                 if (type === 'unmatched' && !row.classList.contains('unmatched')) show = false;
                 if (type === 'pending' && !row.classList.contains('pending')) show = false;
+                if (type === 'left-only' && !row.classList.contains('left-only')) show = false;
+                if (type === 'right-only' && !row.classList.contains('right-only')) show = false;
 
                 row.style.display = show ? 'grid' : 'none';
             });
 
-            showToast(`已筛选：${type === 'all' ? '全部' : type === 'matched' ? '匹配' : type === 'unmatched' ? '不匹配' : '待确认'}`);
+            let filterName = '全部';
+            if (type === 'matched') filterName = '匹配';
+            else if (type === 'unmatched') filterName = '不匹配';
+            else if (type === 'pending') filterName = '待确认';
+            else if (type === 'left-only') filterName = '左边独有';
+            else if (type === 'right-only') filterName = '右边独有';
+
+            showToast(`已筛选：${filterName}`);
         }
 
         function saveDraft() {
@@ -1344,8 +1471,9 @@
         }
 
         function submitReview() {
-            if (markedItems.size < 18) {
-                if (!confirm(`还有 ${18 - markedItems.size} 条未标记，确定要提交吗？`)) {
+            const total = document.querySelectorAll('.compare-row').length;
+            if (markedItems.size < total) {
+                if (!confirm(`还有 ${total - markedItems.size} 条未标记，确定要提交吗？`)) {
                     return;
                 }
             }
@@ -1400,6 +1528,7 @@
         });
 
         document.addEventListener('DOMContentLoaded', () => {
+            updateProgress();
             showToast('页面加载完成，支持快捷键操作', 'success');
         });
     </script>

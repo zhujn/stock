@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>基金投资监督指标AI比对</title>
+    <title>基金投资监督指标AI识别比对</title>
     <style>
         * {
             margin: 0;
@@ -13,24 +13,23 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f7fa;
             min-height: 100vh;
             padding: 20px;
         }
 
-        /* 主容器 */
         .main-container {
             max-width: 1600px;
             margin: 0 auto;
         }
 
-        /* 页面头部 */
         .page-header {
             background: #fff;
             border-radius: 12px;
             padding: 24px 32px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid #e8e8e8;
         }
 
         .header-title {
@@ -44,8 +43,14 @@
         }
 
         .header-title::before {
-            content: "📊";
-            font-size: 26px;
+            content: "";
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .fund-info {
@@ -77,7 +82,6 @@
             color: #1890ff;
         }
 
-        /* 统计卡片 */
         .stats-bar {
             display: flex;
             gap: 16px;
@@ -146,12 +150,12 @@
             background: #fffbe6;
         }
 
-        /* 比对区域 */
         .compare-section {
             background: #fff;
             border-radius: 12px;
             padding: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid #e8e8e8;
         }
 
         .section-header {
@@ -196,7 +200,6 @@
             color: #fff;
         }
 
-        /* 左右分栏布局 */
         .compare-grid {
             display: grid;
             grid-template-columns: 1fr 280px 1fr;
@@ -204,7 +207,6 @@
             min-height: 600px;
         }
 
-        /* 左侧 - 已配置指标 */
         .left-panel {
             background: #f8fafc;
             border-radius: 10px 0 0 10px;
@@ -231,7 +233,19 @@
         }
 
         .panel-title.config::before {
-            content: "⚙️";
+            content: "";
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+            border-radius: 4px;
+        }
+
+        .panel-title.ai::before {
+            content: "";
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+            border-radius: 4px;
         }
 
         .panel-count {
@@ -242,7 +256,6 @@
             border-radius: 12px;
         }
 
-        /* 右侧 - AI识别指标 */
         .right-panel {
             background: #f8fafc;
             border-radius: 0 10px 10px 0;
@@ -250,11 +263,6 @@
             border-left: 1px dashed #d9d9d9;
         }
 
-        .panel-title.ai::before {
-            content: "🤖";
-        }
-
-        /* 中间 - 操作区 */
         .center-panel {
             background: #fff;
             padding: 20px 16px;
@@ -339,25 +347,27 @@
             color: #faad14;
         }
 
-        /* 操作按钮 */
         .action-group {
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            flex-direction: row;
+            gap: 6px;
+            margin-bottom: 8px;
         }
 
         .action-btn {
-            height: 40px;
+            height: 32px;
+            min-width: 84px;
             border: 2px solid;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 4px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 3px;
+            flex: 1;
         }
 
         .action-btn:hover {
@@ -388,22 +398,16 @@
         }
 
         .feedback-area {
-            margin-top: 12px;
-        }
-
-        .feedback-label {
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 6px;
+            margin-top: 0px;
         }
 
         .feedback-input {
             width: 100%;
-            height: 60px;
-            padding: 8px 12px;
+            height: 36px;
+            padding: 5px 8px;
             border: 1px solid #d9d9d9;
-            border-radius: 6px;
-            font-size: 12px;
+            border-radius: 4px;
+            font-size: 11px;
             resize: none;
             font-family: inherit;
         }
@@ -414,7 +418,6 @@
             box-shadow: 0 0 0 3px rgba(64, 169, 255, 0.1);
         }
 
-        /* 指标卡片 */
         .indicator-card {
             background: #fff;
             border-radius: 10px;
@@ -437,70 +440,81 @@
             border-left-color: #ff4d4f;
         }
 
+        .indicator-card.pending {
+            border-left-color: #faad14;
+        }
+
         .indicator-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 12px;
+            margin-bottom: 6px;
         }
 
         .indicator-name {
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 700;
             color: #1a1a1a;
-            line-height: 1.4;
+            line-height: 1.2;
         }
 
         .indicator-code {
-            font-size: 12px;
+            font-size: 10px;
             color: #999;
             background: #f5f5f5;
-            padding: 2px 8px;
-            border-radius: 4px;
+            padding: 2px 5px;
+            border-radius: 3px;
         }
 
         .indicator-section {
-            margin-top: 12px;
-            padding: 12px;
+            margin-top: 6px;
+            padding: 6px 8px;
             background: #f8fafc;
-            border-radius: 8px;
+            border-radius: 4px;
         }
 
         .section-label {
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 600;
             color: #666;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
 
         .section-label.business::before {
-            content: "💼";
+            content: "";
+            width: 14px;
+            height: 14px;
+            background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+            border-radius: 2px;
         }
 
         .section-label.contract::before {
-            content: "📄";
+            content: "";
+            width: 14px;
+            height: 14px;
+            background: linear-gradient(135deg, #722ed1 0%, #531dab 100%);
+            border-radius: 2px;
         }
 
         .section-content {
-            font-size: 13px;
+            font-size: 11px;
             color: #555;
-            line-height: 1.6;
+            line-height: 1.4;
         }
 
         .clause-ref {
             display: inline-block;
-            font-size: 11px;
+            font-size: 9px;
             color: #1890ff;
             background: #e6f7ff;
-            padding: 2px 8px;
-            border-radius: 4px;
-            margin-top: 8px;
+            padding: 1px 5px;
+            border-radius: 2px;
+            margin-top: 4px;
         }
 
-        /* 空状态 */
         .empty-state {
             text-align: center;
             padding: 40px 20px;
@@ -516,7 +530,6 @@
             font-size: 14px;
         }
 
-        /* 底部操作栏 */
         .bottom-bar {
             position: fixed;
             bottom: 0;
@@ -596,7 +609,6 @@
             box-shadow: 0 6px 20px rgba(24, 144, 255, 0.4);
         }
 
-        /* Toast提示 */
         .toast {
             position: fixed;
             top: 24px;
@@ -625,30 +637,360 @@
             background: #ff4d4f;
         }
 
-        /* 快捷键提示 */
-        .shortcut-tips {
-            position: fixed;
-            bottom: 90px;
-            right: 32px;
-            background: rgba(0,0,0,0.8);
-            color: #fff;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 12px;
-            line-height: 1.8;
+
+
+        .panel-scroll {
+            max-height: calc(100vh - 400px);
+            overflow-y: auto;
+            padding-right: 8px;
         }
 
-        .shortcut-tips kbd {
-            background: rgba(255,255,255,0.2);
+        .panel-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .panel-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .panel-scroll::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+
+        .panel-scroll::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .indicator-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding: 16px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .indicator-row:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .indicator-row.matched {
+            border-left-color: #52c41a;
+        }
+
+        .indicator-row.unmatched {
+            border-left-color: #ff4d4f;
+        }
+
+        .indicator-row.pending {
+            border-left-color: #faad14;
+        }
+
+        .indicator-left {
+            flex: 1;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .indicator-right {
+            flex: 1;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .row-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .row-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .row-section {
+            margin-top: 8px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 6px;
+        }
+
+        .row-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .row-content {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .row-clause-ref {
+            display: inline-block;
+            font-size: 10px;
+            color: #1890ff;
+            background: #e6f7ff;
             padding: 2px 6px;
             border-radius: 4px;
-            font-family: monospace;
+            margin-top: 6px;
+        }
+
+        .compare-new-grid {
+            display: none;
+        }
+
+        .compare-new-grid.active {
+            display: block;
+        }
+
+        .compare-traditional {
+            display: block;
+        }
+
+        .compare-traditional.hidden {
+            display: none;
+        }
+
+        .layout-toggle {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .toggle-btn {
+            padding: 8px 16px;
+            border: 2px solid #d9d9d9;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #555;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn:hover {
+            border-color: #40a9ff;
+            color: #40a9ff;
+        }
+
+        .toggle-btn.active {
+            background: #1890ff;
+            border-color: #1890ff;
+            color: #fff;
+        }
+
+        .card-row {
+            display: grid;
+            grid-template-columns: 1fr 280px 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .scroll-sync-container {
+            display: flex;
+            gap: 12px;
+        }
+
+        .scroll-sync-left, .scroll-sync-right {
+            flex: 1;
+            max-height: calc(100vh - 350px);
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .scroll-sync-left::-webkit-scrollbar,
+        .scroll-sync-right::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scroll-sync-left::-webkit-scrollbar-track,
+        .scroll-sync-right::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .scroll-sync-left::-webkit-scrollbar-thumb,
+        .scroll-sync-right::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+
+        .scroll-sync-left::-webkit-scrollbar-thumb:hover,
+        .scroll-sync-right::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .sync-center {
+            width: 280px;
+            flex-shrink: 0;
+        }
+
+        .row-layout {
+            display: block;
+        }
+
+        .compare-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 240px;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #e8e8e8;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .compare-row:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .compare-row.matched {
+            border-left-color: #52c41a;
+        }
+
+        .compare-row.unmatched {
+            border-left-color: #ff4d4f;
+        }
+
+        .compare-row.pending {
+            border-left-color: #faad14;
+        }
+
+        .row-left {
+            background: #f8fafc;
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        .row-center {
+            background: #f8fafc;
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        .row-right {
+            background: #fafbfc;
+            border-radius: 6px;
+            padding: 10px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .row-center {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .row-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8e8e8;
+        }
+
+        .row-panel-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .row-panel-title.config::before {
+            content: "";
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+            border-radius: 3px;
+        }
+
+        .row-panel-title.ai::before {
+            content: "";
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+            border-radius: 3px;
+        }
+
+        .headers-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 240px;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .header-column {
+            background: #f8fafc;
+            border-radius: 4px;
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #e8e8e8;
+        }
+
+        .compare-row.left-only {
+            border-left-color: #fa8c16;
+        }
+
+        .compare-row.right-only {
+            border-left-color: #722ed1;
+        }
+
+        .empty-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 100px;
+            color: #999;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .empty-indicator-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            opacity: 0.5;
+        }
+
+        .empty-indicator-text {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .empty-indicator-hint {
+            font-size: 11px;
+            margin-top: 4px;
+            color: #bfbfbf;
         }
     </style>
 </head>
 <body>
     <div class="main-container">
-        <!-- 页面头部 -->
         <div class="page-header">
             <div class="header-title">基金投资监督指标AI识别比对</div>
             <div class="fund-info">
@@ -671,14 +1013,13 @@
             </div>
         </div>
 
-        <!-- 统计卡片 -->
         <div class="stats-bar">
             <div class="stat-card matched">
                 <div class="stat-info">
                     <span class="stat-label">已配置指标</span>
                     <span class="stat-value">18条</span>
                 </div>
-                <div class="stat-icon">⚙️</div>
+                <div class="stat-icon">✓</div>
             </div>
             <div class="stat-card matched">
                 <div class="stat-info">
@@ -710,7 +1051,6 @@
             </div>
         </div>
 
-        <!-- 比对区域 -->
         <div class="compare-section">
             <div class="section-header">
                 <div class="section-title">指标逐条比对</div>
@@ -719,19 +1059,28 @@
                     <button class="filter-tab" onclick="filterItems('matched')">✓ 匹配</button>
                     <button class="filter-tab" onclick="filterItems('unmatched')">✗ 不匹配</button>
                     <button class="filter-tab" onclick="filterItems('pending')">⏳ 待确认</button>
+                    <button class="filter-tab" onclick="filterItems('left-only')">← 独有</button>
+                    <button class="filter-tab" onclick="filterItems('right-only')">→ 独有</button>
                 </div>
             </div>
 
-            <div class="compare-grid">
-                <!-- 左侧 - 已配置指标 -->
-                <div class="left-panel">
-                    <div class="panel-header">
+            <div class="row-layout">
+                <div class="headers-row">
+                    <div class="header-column">
                         <div class="panel-title config">已配置投资监督指标</div>
                         <div class="panel-count">18条</div>
                     </div>
+                    <div class="header-column">
+                        <div class="panel-title ai">AI识别合同指标</div>
+                        <div class="panel-count">16条</div>
+                    </div>
+                    <div class="header-column">
+                        <div class="panel-title" style="gap: 6px; display: flex; align-items: center; font-size: 13px; font-weight: 700; color: #666;">操作</div>
+                    </div>
+                </div>
 
-                    <!-- 指标卡片1 -->
-                    <div class="indicator-card matched" data-index="0">
+                <div class="compare-row matched" data-index="0">
+                    <div class="row-left">
                         <div class="indicator-header">
                             <div class="indicator-name">单一股票持仓比例限制</div>
                             <div class="indicator-code">INV-001</div>
@@ -743,191 +1092,7 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- 指标卡片2 -->
-                    <div class="indicator-card matched" data-index="1">
-                        <div class="indicator-header">
-                            <div class="indicator-name">行业集中度限制</div>
-                            <div class="indicator-code">INV-002</div>
-                        </div>
-                        <div class="indicator-section">
-                            <div class="section-label business">业务涵义</div>
-                            <div class="section-content">
-                                限制基金在单一行业的投资占比，分散行业系统性风险。适用于周期性较强或政策敏感型行业的风险管控。
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 指标卡片3 -->
-                    <div class="indicator-card unmatched" data-index="2">
-                        <div class="indicator-header">
-                            <div class="indicator-name">关联交易限制</div>
-                            <div class="indicator-code">INV-003</div>
-                        </div>
-                        <div class="indicator-section">
-                            <div class="section-label business">业务涵义</div>
-                            <div class="section-content">
-                                防范基金与关联方之间的利益输送风险，确保投资决策的独立性和公允性。需监控与基金管理人、托管人关联方的交易行为。
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 指标卡片4 -->
-                    <div class="indicator-card matched" data-index="3">
-                        <div class="indicator-header">
-                            <div class="indicator-name">杠杆比例上限</div>
-                            <div class="indicator-code">INV-004</div>
-                        </div>
-                        <div class="indicator-section">
-                            <div class="section-label business">业务涵义</div>
-                            <div class="section-content">
-                                控制基金整体杠杆水平，防范过度杠杆导致的流动性风险和净值波动风险。包括回购融资、衍生品等形成的杠杆。
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 指标卡片5 -->
-                    <div class="indicator-card pending" data-index="4">
-                        <div class="indicator-header">
-                            <div class="indicator-name">流动性资产比例</div>
-                            <div class="indicator-code">INV-005</div>
-                        </div>
-                        <div class="indicator-section">
-                            <div class="section-label business">业务涵义</div>
-                            <div class="section-content">
-                                确保基金保持足够的流动性资产以应对赎回压力，维护基金运作的稳定性。流动性资产包括现金、国债等高流动性金融工具。
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 中间 - 操作区 -->
-                <div class="center-panel">
-                    <!-- 操作卡片1 -->
-                    <div class="match-item" data-index="0">
-                        <div class="match-status matched">
-                            <div class="status-badge">
-                                <span>✓</span>
-                                <span>高度匹配</span>
-                            </div>
-                            <div class="similarity-score">95%</div>
-                        </div>
-                        <div class="action-group">
-                            <button class="action-btn btn-correct active" onclick="markItem(0, 'correct')">
-                                <span>✓</span> 识别正确
-                            </button>
-                            <button class="action-btn btn-wrong" onclick="markItem(0, 'wrong')">
-                                <span>✗</span> 识别错误
-                            </button>
-                        </div>
-                        <div class="feedback-area">
-                            <div class="feedback-label">反馈说明（可选）</div>
-                            <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
-                        </div>
-                    </div>
-
-                    <!-- 操作卡片2 -->
-                    <div class="match-item" data-index="1">
-                        <div class="match-status matched">
-                            <div class="status-badge">
-                                <span>✓</span>
-                                <span>高度匹配</span>
-                            </div>
-                            <div class="similarity-score">92%</div>
-                        </div>
-                        <div class="action-group">
-                            <button class="action-btn btn-correct active" onclick="markItem(1, 'correct')">
-                                <span>✓</span> 识别正确
-                            </button>
-                            <button class="action-btn btn-wrong" onclick="markItem(1, 'wrong')">
-                                <span>✗</span> 识别错误
-                            </button>
-                        </div>
-                        <div class="feedback-area">
-                            <div class="feedback-label">反馈说明（可选）</div>
-                            <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
-                        </div>
-                    </div>
-
-                    <!-- 操作卡片3 -->
-                    <div class="match-item" data-index="2">
-                        <div class="match-status unmatched">
-                            <div class="status-badge">
-                                <span>✗</span>
-                                <span>不匹配</span>
-                            </div>
-                            <div class="similarity-score">45%</div>
-                        </div>
-                        <div class="action-group">
-                            <button class="action-btn btn-correct" onclick="markItem(2, 'correct')">
-                                <span>✓</span> 识别正确
-                            </button>
-                            <button class="action-btn btn-wrong active" onclick="markItem(2, 'wrong')">
-                                <span>✗</span> 识别错误
-                            </button>
-                        </div>
-                        <div class="feedback-area">
-                            <div class="feedback-label">反馈说明（可选）</div>
-                            <textarea class="feedback-input" placeholder="请说明不匹配原因..."></textarea>
-                        </div>
-                    </div>
-
-                    <!-- 操作卡片4 -->
-                    <div class="match-item" data-index="3">
-                        <div class="match-status matched">
-                            <div class="status-badge">
-                                <span>✓</span>
-                                <span>高度匹配</span>
-                            </div>
-                            <div class="similarity-score">88%</div>
-                        </div>
-                        <div class="action-group">
-                            <button class="action-btn btn-correct active" onclick="markItem(3, 'correct')">
-                                <span>✓</span> 识别正确
-                            </button>
-                            <button class="action-btn btn-wrong" onclick="markItem(3, 'wrong')">
-                                <span>✗</span> 识别错误
-                            </button>
-                        </div>
-                        <div class="feedback-area">
-                            <div class="feedback-label">反馈说明（可选）</div>
-                            <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
-                        </div>
-                    </div>
-
-                    <!-- 操作卡片5 -->
-                    <div class="match-item" data-index="4">
-                        <div class="match-status pending">
-                            <div class="status-badge">
-                                <span>⏳</span>
-                                <span>待确认</span>
-                            </div>
-                            <div class="similarity-score">72%</div>
-                        </div>
-                        <div class="action-group">
-                            <button class="action-btn btn-correct" onclick="markItem(4, 'correct')">
-                                <span>✓</span> 识别正确
-                            </button>
-                            <button class="action-btn btn-wrong" onclick="markItem(4, 'wrong')">
-                                <span>✗</span> 识别错误
-                            </button>
-                        </div>
-                        <div class="feedback-area">
-                            <div class="feedback-label">反馈说明（可选）</div>
-                            <textarea class="feedback-input" placeholder="请确认是否匹配..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 右侧 - AI识别指标 -->
-                <div class="right-panel">
-                    <div class="panel-header">
-                        <div class="panel-title ai">AI识别合同指标</div>
-                        <div class="panel-count">16条</div>
-                    </div>
-
-                    <!-- AI指标卡片1 -->
-                    <div class="indicator-card matched" data-index="0">
+                    <div class="row-center">
                         <div class="indicator-header">
                             <div class="indicator-name">个股持仓上限控制</div>
                             <div class="indicator-code">AI-001</div>
@@ -940,9 +1105,37 @@
                             <span class="clause-ref">第12条第3款</span>
                         </div>
                     </div>
+                    <div class="row-right">
+                        <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="0">
+                            <div class="action-group">
+                                <button class="action-btn btn-correct active" onclick="markItem(0, 'correct')">
+                                    <span>✓</span> 识别正确
+                                </button>
+                                <button class="action-btn btn-wrong" onclick="markItem(0, 'wrong')">
+                                    <span>✗</span> 识别错误
+                                </button>
+                            </div>
+                            <div class="feedback-area">
+                                <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                    <!-- AI指标卡片2 -->
-                    <div class="indicator-card matched" data-index="1">
+                <div class="compare-row matched" data-index="1">
+                    <div class="row-left">
+                        <div class="indicator-header">
+                            <div class="indicator-name">行业集中度限制</div>
+                            <div class="indicator-code">INV-002</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label business">业务涵义</div>
+                            <div class="section-content">
+                                限制基金在单一行业的投资占比，分散行业系统性风险。适用于周期性较强或政策敏感型行业的风险管控。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-center">
                         <div class="indicator-header">
                             <div class="indicator-name">行业投资集中度管理</div>
                             <div class="indicator-code">AI-002</div>
@@ -955,9 +1148,37 @@
                             <span class="clause-ref">第12条第4款</span>
                         </div>
                     </div>
+                    <div class="row-right">
+                        <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="1">
+                            <div class="action-group">
+                                <button class="action-btn btn-correct active" onclick="markItem(1, 'correct')">
+                                    <span>✓</span> 识别正确
+                                </button>
+                                <button class="action-btn btn-wrong" onclick="markItem(1, 'wrong')">
+                                    <span>✗</span> 识别错误
+                                </button>
+                            </div>
+                            <div class="feedback-area">
+                                <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                    <!-- AI指标卡片3 -->
-                    <div class="indicator-card unmatched" data-index="2">
+                <div class="compare-row unmatched" data-index="2">
+                    <div class="row-left">
+                        <div class="indicator-header">
+                            <div class="indicator-name">关联交易限制</div>
+                            <div class="indicator-code">INV-003</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label business">业务涵义</div>
+                            <div class="section-content">
+                                防范基金与关联方之间的利益输送风险，确保投资决策的独立性和公允性。需监控与基金管理人、托管人关联方的交易行为。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-center">
                         <div class="indicator-header">
                             <div class="indicator-name">关联方交易监控</div>
                             <div class="indicator-code">AI-003</div>
@@ -970,9 +1191,37 @@
                             <span class="clause-ref">第15条第1款</span>
                         </div>
                     </div>
+                    <div class="row-right">
+                        <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="2">
+                            <div class="action-group">
+                                <button class="action-btn btn-correct" onclick="markItem(2, 'correct')">
+                                    <span>✓</span> 识别正确
+                                </button>
+                                <button class="action-btn btn-wrong active" onclick="markItem(2, 'wrong')">
+                                    <span>✗</span> 识别错误
+                                </button>
+                            </div>
+                            <div class="feedback-area">
+                                <textarea class="feedback-input" placeholder="请说明不匹配原因..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                    <!-- AI指标卡片4 -->
-                    <div class="indicator-card matched" data-index="3">
+                <div class="compare-row matched" data-index="3">
+                    <div class="row-left">
+                        <div class="indicator-header">
+                            <div class="indicator-name">杠杆比例上限</div>
+                            <div class="indicator-code">INV-004</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label business">业务涵义</div>
+                            <div class="section-content">
+                                控制基金整体杠杆水平，防范过度杠杆导致的流动性风险和净值波动风险。包括回购融资、衍生品等形成的杠杆。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-center">
                         <div class="indicator-header">
                             <div class="indicator-name">融资杠杆比例控制</div>
                             <div class="indicator-code">AI-004</div>
@@ -985,9 +1234,37 @@
                             <span class="clause-ref">第18条第2款</span>
                         </div>
                     </div>
+                    <div class="row-right">
+                        <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="3">
+                            <div class="action-group">
+                                <button class="action-btn btn-correct active" onclick="markItem(3, 'correct')">
+                                    <span>✓</span> 识别正确
+                                </button>
+                                <button class="action-btn btn-wrong" onclick="markItem(3, 'wrong')">
+                                    <span>✗</span> 识别错误
+                                </button>
+                            </div>
+                            <div class="feedback-area">
+                                <textarea class="feedback-input" placeholder="如有补充说明请填写..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                    <!-- AI指标卡片5 -->
-                    <div class="indicator-card pending" data-index="4">
+                <div class="compare-row pending" data-index="4">
+                    <div class="row-left">
+                        <div class="indicator-header">
+                            <div class="indicator-name">流动性资产比例</div>
+                            <div class="indicator-code">INV-005</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label business">业务涵义</div>
+                            <div class="section-content">
+                                确保基金保持足够的流动性资产以应对赎回压力，维护基金运作的稳定性。流动性资产包括现金、国债等高流动性金融工具。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-center">
                         <div class="indicator-header">
                             <div class="indicator-name">高流动性资产配置要求</div>
                             <div class="indicator-code">AI-005</div>
@@ -1000,15 +1277,105 @@
                             <span class="clause-ref">第11条第5款</span>
                         </div>
                     </div>
+                    <div class="row-right">
+                        <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="4">
+                            <div class="action-group">
+                                <button class="action-btn btn-correct" onclick="markItem(4, 'correct')">
+                                    <span>✓</span> 识别正确
+                                </button>
+                                <button class="action-btn btn-wrong" onclick="markItem(4, 'wrong')">
+                                    <span>✗</span> 识别错误
+                                </button>
+                            </div>
+                            <div class="feedback-area">
+                                <textarea class="feedback-input" placeholder="请确认是否匹配..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compare-row left-only" data-index="5">
+                    <div class="row-left">
+                        <div class="indicator-header">
+                            <div class="indicator-name">重大关联交易审批流程</div>
+                            <div class="indicator-code">INV-006</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label business">业务涵义</div>
+                            <div class="section-content">
+                                规范重大关联交易的决策审批流程，确保交易价格公允合理，保护基金持有人利益。超过一定金额的关联交易需经专门委员会审批。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-center">
+                        <div class="empty-indicator">
+                            <div class="empty-indicator-icon">🔍</div>
+                            <div class="empty-indicator-text">暂无匹配指标</div>
+                            <div class="empty-indicator-hint">AI未识别到对应的合同条款</div>
+                        </div>
+                    </div>
+                    <div class="row-right">
+                        <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="5">
+                            <div class="action-group">
+                                <button class="action-btn btn-correct" onclick="markItem(5, 'correct')">
+                                    <span>✓</span> 确认无匹配
+                                </button>
+                                <button class="action-btn btn-wrong" onclick="markItem(5, 'wrong')">
+                                    <span>✗</span> 识别错误
+                                </button>
+                            </div>
+                            <div class="feedback-area">
+                                <textarea class="feedback-input" placeholder="请补充说明..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compare-row right-only" data-index="6">
+                    <div class="row-left">
+                        <div class="empty-indicator">
+                            <div class="empty-indicator-icon">📋</div>
+                            <div class="empty-indicator-text">暂无配置指标</div>
+                            <div class="empty-indicator-hint">未在配置清单中找到对应指标</div>
+                        </div>
+                    </div>
+                    <div class="row-center">
+                        <div class="indicator-header">
+                            <div class="indicator-name">基金净值波动预警机制</div>
+                            <div class="indicator-code">AI-006</div>
+                        </div>
+                        <div class="indicator-section">
+                            <div class="section-label contract">合同条款原文</div>
+                            <div class="section-content">
+                                "当基金单位净值日跌幅超过5%或连续三个交易日累计跌幅超过8%时，管理人应在两个工作日内向托管人报告并说明原因。"
+                            </div>
+                            <span class="clause-ref">第20条第3款</span>
+                        </div>
+                    </div>
+                    <div class="row-right">
+                        <div class="match-item" style="margin: 0; box-shadow: none; border: 0; padding: 0;" data-index="6">
+                            <div class="action-group">
+                                <button class="action-btn btn-correct" onclick="markItem(6, 'correct')">
+                                    <span>✓</span> 需新增配置
+                                </button>
+                                <button class="action-btn btn-wrong" onclick="markItem(6, 'wrong')">
+                                    <span>✗</span> 无需配置
+                                </button>
+                            </div>
+                            <div class="feedback-area">
+                                <textarea class="feedback-input" placeholder="请补充说明..."></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 
-    <!-- 底部操作栏 -->
     <div class="bottom-bar">
         <div class="progress-info">
-            <span class="progress-text">已标记 <strong id="markedNum">0</strong> / 18 条指标</span>
+            <span class="progress-text">已标记 <strong id="markedNum">0</strong> / <span id="totalItems">7</span> 条指标</span>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressBar" style="width: 0%;"></div>
             </div>
@@ -1019,99 +1386,100 @@
         </div>
     </div>
 
-    <!-- 快捷键提示 -->
-    <div class="shortcut-tips">
-        <div>快捷键：</div>
-        <div><kbd>Y</kbd> 标记正确</div>
-        <div><kbd>N</kbd> 标记错误</div>
-        <div><kbd>↑</kbd><kbd>↓</kbd> 切换条目</div>
-    </div>
 
-    <!-- Toast提示 -->
+
     <div class="toast" id="toast"></div>
 
     <script>
         let markedItems = new Set();
         let currentIndex = 0;
 
-        // 标记条目
         function markItem(index, type) {
             const item = document.querySelector(`.match-item[data-index="${index}"]`);
             const correctBtn = item.querySelector('.btn-correct');
             const wrongBtn = item.querySelector('.btn-wrong');
-            const statusDiv = item.querySelector('.match-status');
 
-            // 重置按钮状态
             correctBtn.classList.remove('active');
             wrongBtn.classList.remove('active');
 
-            // 设置选中状态
             if (type === 'correct') {
                 correctBtn.classList.add('active');
-                statusDiv.className = 'match-status matched';
                 showToast('已标记为「识别正确」', 'success');
             } else {
                 wrongBtn.classList.add('active');
-                statusDiv.className = 'match-status unmatched';
                 showToast('已标记为「识别错误」', 'error');
             }
 
-            // 更新标记集合
             markedItems.add(index);
             updateProgress();
+            updateCardStyles(index, type);
         }
 
-        // 更新进度
+        function updateCardStyles(index, type) {
+            const rows = document.querySelectorAll(`.compare-row[data-index="${index}"]`);
+            rows.forEach(row => {
+                if (row.classList.contains('left-only') || row.classList.contains('right-only')) {
+                    return;
+                }
+                row.classList.remove('matched', 'unmatched', 'pending');
+                row.classList.add(type === 'correct' ? 'matched' : 'unmatched');
+            });
+        }
+
         function updateProgress() {
             const marked = markedItems.size;
-            const total = 18;
+            const total = document.querySelectorAll('.compare-row').length;
             const percent = (marked / total * 100).toFixed(0);
 
             document.getElementById('markedNum').textContent = marked;
+            document.getElementById('totalItems').textContent = total;
             document.getElementById('markedCount').textContent = `${marked}/${total}`;
             document.getElementById('progressBar').style.width = percent + '%';
         }
 
-        // 筛选功能
         function filterItems(type) {
-            // 更新标签状态
             document.querySelectorAll('.filter-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             event.target.classList.add('active');
 
-            // 筛选逻辑（示例）
-            const items = document.querySelectorAll('.match-item');
-            items.forEach(item => {
-                const status = item.querySelector('.match-status');
+            const rows = document.querySelectorAll('.compare-row');
+            rows.forEach(row => {
                 let show = true;
 
-                if (type === 'matched' && !status.classList.contains('matched')) show = false;
-                if (type === 'unmatched' && !status.classList.contains('unmatched')) show = false;
-                if (type === 'pending' && !status.classList.contains('pending')) show = false;
+                if (type === 'matched' && !row.classList.contains('matched')) show = false;
+                if (type === 'unmatched' && !row.classList.contains('unmatched')) show = false;
+                if (type === 'pending' && !row.classList.contains('pending')) show = false;
+                if (type === 'left-only' && !row.classList.contains('left-only')) show = false;
+                if (type === 'right-only' && !row.classList.contains('right-only')) show = false;
 
-                item.style.display = show ? 'block' : 'none';
+                row.style.display = show ? 'grid' : 'none';
             });
 
-            showToast(`已筛选：${type === 'all' ? '全部' : type === 'matched' ? '匹配' : type === 'unmatched' ? '不匹配' : '待确认'}`);
+            let filterName = '全部';
+            if (type === 'matched') filterName = '匹配';
+            else if (type === 'unmatched') filterName = '不匹配';
+            else if (type === 'pending') filterName = '待确认';
+            else if (type === 'left-only') filterName = '左边独有';
+            else if (type === 'right-only') filterName = '右边独有';
+
+            showToast(`已筛选：${filterName}`);
         }
 
-        // 保存草稿
         function saveDraft() {
             showToast('草稿已保存', 'success');
         }
 
-        // 提交审核
         function submitReview() {
-            if (markedItems.size < 18) {
-                if (!confirm(`还有 ${18 - markedItems.size} 条未标记，确定要提交吗？`)) {
+            const total = document.querySelectorAll('.compare-row').length;
+            if (markedItems.size < total) {
+                if (!confirm(`还有 ${total - markedItems.size} 条未标记，确定要提交吗？`)) {
                     return;
                 }
             }
             showToast('审核已提交', 'success');
         }
 
-        // 显示Toast
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -1122,37 +1490,45 @@
             }, 2500);
         }
 
-        // 键盘快捷键
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'TEXTAREA') return;
 
-            const items = document.querySelectorAll('.match-item');
+            const rows = document.querySelectorAll('.compare-row');
+            const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
 
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
-                currentIndex = Math.min(currentIndex + 1, items.length - 1);
-                items[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                items[currentIndex].style.boxShadow = '0 0 0 3px #1890ff';
+                currentIndex = Math.min(currentIndex + 1, visibleRows.length - 1);
+                visibleRows[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                visibleRows[currentIndex].style.boxShadow = '0 0 0 3px #1890ff';
                 setTimeout(() => {
-                    items[currentIndex].style.boxShadow = '';
+                    visibleRows[currentIndex].style.boxShadow = '';
                 }, 500);
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 currentIndex = Math.max(currentIndex - 1, 0);
-                items[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                items[currentIndex].style.boxShadow = '0 0 0 3px #1890ff';
+                visibleRows[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                visibleRows[currentIndex].style.boxShadow = '0 0 0 3px #1890ff';
                 setTimeout(() => {
-                    items[currentIndex].style.boxShadow = '';
+                    visibleRows[currentIndex].style.boxShadow = '';
                 }, 500);
             } else if (e.key === 'y' || e.key === 'Y') {
-                markItem(currentIndex, 'correct');
+                const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
+                if (visibleRows[currentIndex]) {
+                    const index = parseInt(visibleRows[currentIndex].getAttribute('data-index'));
+                    markItem(index, 'correct');
+                }
             } else if (e.key === 'n' || e.key === 'N') {
-                markItem(currentIndex, 'wrong');
+                const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
+                if (visibleRows[currentIndex]) {
+                    const index = parseInt(visibleRows[currentIndex].getAttribute('data-index'));
+                    markItem(index, 'wrong');
+                }
             }
         });
 
-        // 初始化
         document.addEventListener('DOMContentLoaded', () => {
+            updateProgress();
             showToast('页面加载完成，支持快捷键操作', 'success');
         });
     </script>
